@@ -1,15 +1,10 @@
-﻿@using blazelogBase.Components.Layout
-@using Microsoft.AspNetCore.Mvc
-@using Microsoft.AspNetCore.Mvc.Infrastructure
-@using Microsoft.AspNetCore.Mvc.Rendering
-@using Microsoft.AspNetCore.Mvc.Routing
-@using Microsoft.AspNetCore.Mvc.ViewFeatures
-@using blazelogBase.Controllers
+﻿@using blazelogBase.Controllers
 @using blazelogBase.Models
+@using blazelogBase.Components.Layout
+@using MudBlazor
 
-@inject IHttpContextAccessor HttpContextAccessor
-@inject IActionContextAccessor ActionContextAccessor
-@inject IUrlHelper Url
+
+
 @inject LayoutStateModel GlobalState
 
 <LayoutView Layout="typeof(MainLayout)">

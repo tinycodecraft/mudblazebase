@@ -10,6 +10,8 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Routing;
+using MudBlazor;
+using MudBlazor.Services;
 using Serilog;
 using System.Text.Json.Serialization;
 
@@ -120,6 +122,10 @@ builder.Services.AddSession(options =>
     options.Cookie.Name = $"{typeof(Program).Assembly.GetName().Name}.Session";
 });
 
+builder.Services.AddMudServices();
+
+// Send all exceptions to the console
+MudGlobal.UnhandledExceptionHandler = (exception) => Log.Error(exception, "[{@t:HH:mm:ss} {@l:u3}{#if @tr is not null} ({substring(@tr,0,4)}:{substring(@sp,0,4)}){#end}] {@m}\n{@x}");
 
 var app = builder.Build();
 
