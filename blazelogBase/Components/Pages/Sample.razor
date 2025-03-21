@@ -1,0 +1,46 @@
+﻿@using blazelogBase.Components.Layout
+@using Microsoft.AspNetCore.Mvc
+@using Microsoft.AspNetCore.Mvc.Infrastructure
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using Microsoft.AspNetCore.Mvc.Routing
+@using Microsoft.AspNetCore.Mvc.ViewFeatures
+@using blazelogBase.Controllers
+
+@inject IHttpContextAccessor HttpContextAccessor
+@inject IActionContextAccessor ActionContextAccessor
+@inject IUrlHelper Url
+@inject LayoutStateModel GlobalState
+
+@{
+    var isHide = HideSideBar;
+    GlobalState.SideBarOpen = !isHide;
+    //init private stuff
+}
+<LayoutView Layout="typeof(SimpleLayout)">
+    <PageTitle>Sample</PageTitle>
+    <HeadContent>
+        <style>
+            main { background: #f0f088; }
+        </style>
+    </HeadContent>
+
+    <p style="float: right;">
+        <a href="@Url.Action("Sample", new { hideSidebar = GlobalState.SideBarOpen })">@(HideSideBar ? "Show Sidebar" : "Hide Sidebar")</a>
+    </p>
+
+    <h1>Hello, Foo!</h1>
+
+    @if (HttpContextAccessor.HttpContext.Request.QueryString.HasValue)
+    {
+        @:Here's your querystring: @HttpContextAccessor.HttpContext.Request.QueryString
+    }
+    <p>This is a Sample Page</p>
+    <Counter />
+</LayoutView>
+
+
+@code {
+    [Parameter]
+    public bool HideSideBar { get; set; }
+
+}

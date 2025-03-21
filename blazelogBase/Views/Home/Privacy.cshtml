@@ -1,0 +1,76 @@
+﻿@using Microsoft.AspNetCore.Mvc.Localization
+@using Microsoft.Extensions.Localization
+@model PrivacyViewModel
+@inject IStringLocalizerFactory stringFactory
+
+@{
+    ViewData["Title"] = "Privacy Policy";
+    var Localizer = stringFactory.Create(typeof(blazelogBase.Resources.SharedResource).Name, typeof(Program).Assembly.GetName().Name!);
+}
+<h1>@ViewData["Title"]</h1>
+
+@{
+    var culture = System.Globalization.CultureInfo.CurrentCulture.Name;
+    var cultureName = System.Globalization.CultureInfo.CurrentCulture.DisplayName;
+    var cultureCode = System.Globalization.CultureInfo.CurrentCulture.TwoLetterISOLanguageName;
+    var cultureDir = System.Globalization.CultureInfo.CurrentCulture.TextInfo.IsRightToLeft ? "rtl" : "ltr";
+
+    <div style="width:600px">
+        <p class="text-success">
+            Controller Thread Culture:  <br />
+            @Model.Culture <br />
+        </p>
+
+        <p class="text-primary">
+            Localized In Controller By ResourceManager (AppName): <br />
+            @Model.AppName
+        </p>
+
+        <p class="text-primary">
+            Localized In Controller By ResourceManager (Hello): <br />
+            @Model.Hello
+        </p>
+
+        <p class="text-primary">
+            Localized In Controller By IStringLocalizer (AppName): <br />
+            @Model.AppNameFromLoc
+        </p>
+
+        <p class="text-primary">
+            Localized In Controller By IStringLocalizer (Hello): <br />
+            @Model.HelloFromLoc
+        </p>
+
+        <p class="text-success">
+            @{
+                string text = "Thread CurrentUICulture is [" +
+                @Thread.CurrentThread.CurrentUICulture.ToString() + "] ; ";
+                text += "Thread CurrentCulture is [" +
+                @Thread.CurrentThread.CurrentCulture.ToString() + "]";
+            }
+            View Thread Culture:  <br />
+            @text
+        </p>
+
+        <p class="text-primary">
+            Localized In View By ResourceManager (AppName): <br />
+            @blazelogBase.Resources.SharedResource.AppName
+        </p>
+
+        <p class="text-primary">
+            Localized In View By ResourceManager (Hello): <br />
+            @blazelogBase.Resources.SharedResource.Hello
+        </p>
+
+        <p class="text-primary">
+            Localized In View By IStringLocalizer: <br />
+            @Localizer["AppName"]
+        </p>
+
+        <p class="text-primary">
+            Localized In View By IStringLocalizer: <br />
+            @Localizer["Hello"]
+        </p>
+
+    </div>
+}

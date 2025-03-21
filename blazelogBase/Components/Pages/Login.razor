@@ -1,0 +1,92 @@
+﻿@using blazelogBase.Components.Layout
+@using Microsoft.AspNetCore.Mvc
+@using Microsoft.AspNetCore.Mvc.Infrastructure
+@using Microsoft.AspNetCore.Mvc.Rendering
+@using Microsoft.AspNetCore.Mvc.Routing
+@using Microsoft.AspNetCore.Mvc.ViewFeatures
+@using blazelogBase.Controllers
+@using blazelogBase.Models
+
+@inject IHttpContextAccessor HttpContextAccessor
+@inject IActionContextAccessor ActionContextAccessor
+@inject IUrlHelper Url
+@inject LayoutStateModel GlobalState
+
+<LayoutView Layout="typeof(MainLayout)">
+    <PageTitle>Login</PageTitle>
+    <HeadContent>
+        <style>
+            main {
+            background: #f0f088;
+            }
+        </style>
+    </HeadContent>
+
+
+
+    <h1>Hello, User Login!</h1>
+
+
+    <p>This is a Sample Login</p>
+
+    <EditForm Model="_model" OnValidSubmit="LoginAsync">
+        <DataAnnotationsValidator />
+        <div class="container mt-5 d-flex justify-content-center">
+            <div class="card" style="width: 450px">
+                <div class="card-header">
+                    <h2>Login</h2>
+                </div>
+                <div class="card-body">
+                    <div class="mb-3">
+                        <label class="form-label">User Id</label>
+                        <InputText @bind-Value="_model.UserId" class="form-control" placeholder="Enter userid" />
+                        <ValidationMessage For="()=> _model.UserId" />
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Password</label>
+                        <InputText type="password" @bind-Value="_model.Password" class="form-control" placeholder="Enter password" />
+                        <ValidationMessage For="()=> _model.Password" />
+                    </div>
+
+                    @if (!string.IsNullOrWhiteSpace(_error))
+                    {
+                        <p class="text-danger">@_error</p>
+                    }
+                </div>
+                <div class="card-footer">
+                    <button type="submit" class="btn btn-success btn-sm">Login</button>
+                </div>
+            </div>
+        </div>
+    </EditForm>
+
+</LayoutView>
+
+
+@code {
+
+    private LoginModel _model = new();
+
+
+    private bool _isProcessing = false;
+    private string? _error = null;
+
+    private async Task<bool> LoginAsync()
+    {
+        _error = null;
+        _isProcessing = true;
+        try
+        {
+            var result= await Task.FromResult(true);
+            return result;
+        }
+        catch (Exception ex)
+        {
+            _isProcessing = false;
+            _error = ex.Message;
+        }
+
+        return false;
+    }
+
+}

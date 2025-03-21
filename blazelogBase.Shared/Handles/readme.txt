@@ -1,0 +1,1 @@
+Please read the vteCore git repo for example to create handler for mediatr request

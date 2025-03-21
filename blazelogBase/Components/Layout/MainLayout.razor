@@ -1,0 +1,36 @@
+﻿@inherits LayoutComponentBase
+@inject LayoutStateModel GlobalState
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <base href="/" />
+    <link rel="stylesheet" href="lib/bootstrap/dist/css/bootstrap.min.css" />    
+    <link rel="stylesheet" href="blazelogBase.styles.css" />
+    <link rel="icon" type="image/png" href="favicon.png" />
+    <HeadOutlet />
+</head>
+<body>
+
+<div class="page">    
+    <div class="container-fluid bg-purple">
+        
+    </div>
+    <div class="container-fluid flex-grow-1">
+        @Body
+    </div>
+    <footer class="fixed-bottom text-center d-flex align-items-center justify-content-center footer">
+        <p class="mb-0 py-2">Blog App built using Blazor Server by <strong>Raymond</strong></p>
+    </footer>
+</div>
+
+<div id="blazor-error-ui">
+    An unhandled error has occurred.
+    <a href="" class="reload">Reload</a>
+    <a class="dismiss">🗙</a>
+</div>
+</body>
+</html>

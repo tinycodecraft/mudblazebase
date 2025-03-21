@@ -1,0 +1,76 @@
+﻿@inject LayoutStateModel GlobalState
+@inject ISender Commander
+@rendermode InteractiveServer
+@{
+
+}
+
+<p>This is a Weather Forecast Page</p>
+@if (forecastDtos == null)
+{
+    <p><em>Loading...</em></p>
+}
+else
+{
+    <div style="max-height: 400px; overflow: auto;">
+        <InfiniteScroll ObserverTargetId="itemtargetid" ObservableTargetReached="(e) => FetchForecasts()">
+            <ul>
+                @foreach (var forecast in forecastDtos)
+                {
+                    <li class="list-group-item"> @forecast.Date: @forecast.TemperatureC-@forecast.TemperatureF (@forecast.Summary)</li>
+                }
+                @if(!Stop)
+                {
+                    <li class="list-group-item" id="itemtargetid"></li>
+                }
+
+            </ul>
+
+
+        </InfiniteScroll>
+    </div>
+}
+
+
+@code {
+    [Parameter]
+    public int Total { get; set; }
+
+    [Parameter]
+    public int Size { get; set; }
+
+    [Parameter]
+    public int Start { get; set; } = 1;
+    private bool Stop { get; set; }= false;
+
+    private List<WeatherForecastDto> forecastDtos=new List<WeatherForecastDto>();
+
+    protected override async Task OnInitializedAsync()
+    {
+        //await FetchForecasts();
+    }
+
+    private async Task FetchForecasts()
+    {
+
+        if(forecastDtos.Count < Total)
+        {
+
+
+            forecastDtos.AddRange(await Commander.Send(new GetWeatherForecastsQuery(Total, Start, Size)));
+
+            Start = forecastDtos.Count + 1;
+        }
+
+        if(Start >Total)
+        {
+            Stop = true;
+        }
+
+
+
+        
+    }
+
+    
+}

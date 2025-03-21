@@ -1,0 +1,19 @@
+﻿@model List<UserDto>
+@{
+    ViewData["Title"] = "Home Page";
+
+    var datum = Model.FirstOrDefault();
+}
+
+<div class="text-center">
+    <h1 class="display-4">Welcome</h1>
+    <p>Learn about <a href="https://learn.microsoft.com/aspnet/core">building Web apps with ASP.NET Core</a>.</p>
+    @if(datum!=null)
+    {
+        <p>First User Name: <span>@datum.UserName</span></p>
+    }
+</div>
+
+<component type="typeof(Students)" render-mode="ServerPrerendered" />
+
+
