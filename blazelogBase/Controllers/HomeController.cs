@@ -52,9 +52,9 @@ public class HomeController : Controller
 
     }
 
-    public IResult Login()
+    public IActionResult Login()
     {
-        return this.RazorView<Login>();
+        return View(new LoginModel());
     }
 
     public IResult Sample(bool hideSideBar = false)

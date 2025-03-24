@@ -20,7 +20,7 @@
 
 <Paginator State="@pagination" />
 
-<a href="#" @onclick="OnCallInterJs">Click Me (Example to inject JavaScript to invoke)</a>
+<a href="#" @onclick="OnCallInterJs" @onclick:preventDefault="true" @onclick:stopPropagation="true">Click Me (Example to inject JavaScript to invoke)</a>
 
 
 

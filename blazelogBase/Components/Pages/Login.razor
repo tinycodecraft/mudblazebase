@@ -1,84 +1,112 @@
-﻿@using blazelogBase.Controllers
+﻿@inject LayoutStateModel GlobalState
+@inject ISender Commander
+@rendermode InteractiveServer
+
+@using System.Text.RegularExpressions
+@using System.ComponentModel.DataAnnotations
+
+@using blazelogBase.Controllers
 @using blazelogBase.Models
 @using blazelogBase.Components.Layout
 @using MudBlazor
 
-
-
-
-@inject LayoutStateModel GlobalState
 
 <LayoutView Layout="typeof(MudaLayout)">
     <PageTitle>Login</PageTitle>
     <HeadContent>
         <style>
             main {
-            background: #f0f088;
+                background: #f0f088;
             }
         </style>
     </HeadContent>
+    <MudContainer MaxWidth="MaxWidth.Medium">
+        <div class="d-flex align-items-center mb-3 pb-1">
+            <i class="fas fa-cubes fa-2x me-3" style="color: #ff6219;"></i>
+            <span class="h1 fw-bold mb-0">Logo</span>
+        </div>
 
-
-
-    <h1>Hello, User Login!</h1>
-    <MudPaper Elevation="3" Style="padding:10px; padding-bottom: 50px;">
-
-        <MudTextField @bind-Value="@_model.UserId" Label="User Id" Variant="@Variant.Outlined"  />
-        <MudTextField @bind-Value="@_model.Password" Label="Password" Variant="@Variant.Outlined" InputType="@PasswordInput"  Adornment="@Adornment.End" AdornmentIcon="@PasswordInputIcon" OnAdornmentClick="TogglePasswordAdorn" />
-
-    </MudPaper>
-
-
-
-
+        <h5 class="fw-normal mb-3 pb-3" style="letter-spacing: 1px;">Sign into your account</h5>
+        <MudPaper Class="pa-4">
+            <MudForm @ref="form" @bind-IsValid="@success" @bind-Errors="@errors">
+                <MudTextField Variant="Variant.Outlined" T="string" Label="User ID" Required="true" RequiredError="User name is required!" @bind-Value="@model.UserId" />
+                <MudTextField Variant="Variant.Outlined" T="string" Label="Email" Required="true" RequiredError="Email is required!"
+                              Validation="@(new EmailAddressAttribute() {ErrorMessage = "The email address is invalid"})" />
+                <MudTextField Variant="Variant.Outlined" T="string" Label="Password" HelperText="Choose a strong password" @ref="pwprimref"
+                              InputType="@passwordInputType"
+                              @bind-Value="@model.Password"
+                              Adornment="Adornment.End" AdornmentIcon="@InputIcon" OnAdornmentClick="@TogglePasswordIcon"
+                              Validation="@(new Func<string, IEnumerable<string>>(PasswordStrength))" Required="true"
+                              RequiredError="Password is required!" />
+                <MudTextField Variant="Variant.Outlined" T="string"
+                              Label="Password" HelperText="Confirm password" InputType="@passwordInputType"
+                              Adornment="Adornment.End" AdornmentIcon="@InputIcon" OnAdornmentClick="@TogglePasswordIcon"
+                              Validation="@(new Func<string, string>(PasswordMatch))" />
+            </MudForm>
+        </MudPaper>
+        <MudPaper Class="pa-4 mt-4">
+            <MudButton Variant="Variant.Filled" Color="Color.Primary" DropShadow="false" OnClick="@(()=>form.Validate())">Validate</MudButton>
+            <MudButton Variant="Variant.Filled" Color="Color.Secondary" DropShadow="false" OnClick="@(()=>form.ResetAsync())" Class="mx-2">Reset</MudButton>
+            <MudButton Variant="Variant.Filled" DropShadow="false" OnClick="@(()=>form.ResetValidation())">Reset Validation</MudButton>
+        </MudPaper>
+    </MudContainer>
 
 </LayoutView>
 
 
+
 @code {
 
-    private LoginModel _model = new();
+    bool success;
+    string[] errors = { };
+    MudTextField<string> pwprimref;
+    MudForm form;
 
+    private LoginModel model = new LoginModel();
 
-    private bool _isProcessing = false;
-    private string? _error = null;
+    InputType passwordInputType = InputType.Password;
+    private string InputIcon = Icons.Material.Filled.VisibilityOff;
+    private bool isShow = false;
 
-    bool isShow;
-    InputType PasswordInput = InputType.Password;
-    string PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
-
-    void TogglePasswordAdorn()
+    private void TogglePasswordIcon()
     {
-        @if (isShow)
+        if (isShow)
         {
+            InputIcon = Icons.Material.Filled.VisibilityOff;
             isShow = false;
-            PasswordInputIcon = Icons.Material.Filled.VisibilityOff;
-            PasswordInput = InputType.Password;
+            passwordInputType = InputType.Password;
         }
         else
         {
+            InputIcon = Icons.Material.Filled.Visibility;
             isShow = true;
-            PasswordInputIcon = Icons.Material.Filled.Visibility;
-            PasswordInput = InputType.Text;
+            passwordInputType = InputType.Text;
         }
+
     }
 
-    private async Task<bool> LoginAsync()
+    private IEnumerable<string> PasswordStrength(string pw)
     {
-        _error = null;
-        _isProcessing = true;
-        try
+        if (string.IsNullOrWhiteSpace(pw))
         {
-            var result= await Task.FromResult(true);
-            return result;
+            yield return "Password is required!";
+            yield break;
         }
-        catch (Exception ex)
-        {
-            _isProcessing = false;
-            _error = ex.Message;
-        }
+        if (pw.Length < 8)
+            yield return "Password must be at least of length 8";
+        if (!Regex.IsMatch(pw, @"[A-Z]"))
+            yield return "Password must contain at least one capital letter";
+        if (!Regex.IsMatch(pw, @"[a-z]"))
+            yield return "Password must contain at least one lowercase letter";
+        if (!Regex.IsMatch(pw, @"[0-9]"))
+            yield return "Password must contain at least one digit";
+    }
 
-        return false;
+    private string PasswordMatch(string arg)
+    {
+        if (pwprimref.Value != arg)
+            return "Passwords don't match";
+        return null;
     }
 
 }
