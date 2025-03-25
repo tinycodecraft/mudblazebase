@@ -95,7 +95,12 @@ builder.Services.AddTransient<ProblemDetailsFactory, CustomProblemDetailsFactory
 
 builder.Services.AddCommandMapper();
 
+
 builder.Services.AddStore(builder.Configuration);
+
+//Add authentication service
+
+builder.Services.AddScoped<IN.IAuthService, AuthService>();
 
 //Add Cookie Auth
 

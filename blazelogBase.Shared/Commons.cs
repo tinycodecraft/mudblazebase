@@ -1,13 +1,17 @@
 ﻿using MediatR;
 using blazelogBase.Shared.ErrorOr;
 using blazelogBase.Shared.Models;
+using System.Security.Principal;
 
 namespace blazelogBase.Shared
 {
 
     public class Interfaces
     {
-
+        public interface IAuthService
+        {
+            Task<ErrorOr<IPrincipal>> Authenticate(string userid, string password);
+        }
         public interface ITokenService
         {
             string CreateToken(IAuthResult user);
