@@ -4,7 +4,11 @@ using blazelogBase.Middlewares;
 using blazelogBase.Models;
 using blazelogBase.Resources;
 using blazelogBase.Shared.Tools;
+using blazelogBase.Store.Commands;
 using blazelogBase.Store.Setup;
+using MediatR;
+using Microsoft.AspNetCore.Authentication;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Http.Features;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
@@ -68,6 +72,8 @@ builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 //add common service
 builder.Services.AddScoped<IN.ITokenService,TokenService>();
 
+
+
 //Add razor view global state
 builder.Services.AddScoped<LayoutStateModel>();
 //Add razor Js module 
@@ -90,6 +96,69 @@ builder.Services.AddTransient<ProblemDetailsFactory, CustomProblemDetailsFactory
 builder.Services.AddCommandMapper();
 
 builder.Services.AddStore(builder.Configuration);
+
+//Add Cookie Auth
+
+builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+    .AddCookie(options =>
+    {
+        options.Cookie.Name = $"{CN.Setting.AuthorizeCookieKey}";
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SameSite = SameSiteMode.Strict;
+        options.Cookie.HttpOnly = true;
+        options.LoginPath = "/Home/Login";
+        //options.LogoutPath = "/Account/Logout";
+        //options.AccessDeniedPath = "/Account/AccessDenied";
+        options.ExpireTimeSpan = TimeSpan.FromDays(1);
+        options.SlidingExpiration = true;
+        options.Events = new CookieAuthenticationEvents
+        {
+            OnRedirectToLogin = context =>
+            {
+                
+                context.Response.StatusCode = 401;
+                return Task.CompletedTask;
+            },
+            OnRedirectToAccessDenied = context =>
+            {
+                context.Response.StatusCode = 403;
+                return Task.CompletedTask;
+            },
+
+            OnValidatePrincipal = async context =>
+            {
+                var tokenService = context.HttpContext.RequestServices.GetRequiredService<IN.ITokenService>();
+                ISender commander = context.HttpContext.RequestServices.GetRequiredService<IMediator>();
+                
+                if(context.Principal!=null)
+                {
+                    var user = tokenService.DecodeTokenToUser(context.Principal.Claims.First(x => x.Type == "token").Value);
+                    if (user == null)
+                    {
+                        context.RejectPrincipal();
+                        await context.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                    }
+                    else
+                    {
+                        var founduser = await commander.Send(new GetUserQuery(user.userID));
+                        if(founduser == null)
+                        {
+                            context.RejectPrincipal();
+                            await context.HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                        }
+
+                    }
+                        
+                }
+                else
+                {
+                    Log.Warning("No principal found");
+                }
+
+            }
+        };
+    });
+
 
 
 // Add services to the container.
@@ -119,13 +188,24 @@ builder.Services.AddSession(options =>
     options.IdleTimeout = TimeSpan.FromDays(1);
     options.Cookie.HttpOnly = true;
     options.Cookie.IsEssential = true;
-    options.Cookie.Name = $"{typeof(Program).Assembly.GetName().Name}.Session";
+    options.Cookie.Name = $"{CN.Setting.AppName}.Session";
 });
 
 builder.Services.AddMudServices();
 
 // Send all exceptions to the console
 MudGlobal.UnhandledExceptionHandler = (exception) => Log.Error(exception, "[{@t:HH:mm:ss} {@l:u3}{#if @tr is not null} ({substring(@tr,0,4)}:{substring(@sp,0,4)}){#end}] {@m}\n{@x}");
+
+//Add Anitforegery
+builder.Services.AddAntiforgery(
+    options =>
+    {
+        options.Cookie.Name = $"{CN.Setting.AppName}.Antiforgery";
+        options.Cookie.SecurePolicy = CookieSecurePolicy.Always;
+        options.Cookie.SameSite = SameSiteMode.Strict;
+        options.Cookie.HttpOnly = false;
+        options.HeaderName = "X-XSRF-TOKEN";
+    }); 
 
 var app = builder.Build();
 
