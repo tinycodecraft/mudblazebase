@@ -30,7 +30,7 @@ namespace blazelogBase.Store.Commands
         public async Task<UserDto> Handle(GetUserQuery query,CancellationToken cancellationToken)
         {
             var data = context.CoreUsers.AsQueryable();
-            var user = await data.FirstOrDefaultAsync(e => e.UserId == query.userId);
+            var user = await data.FirstOrDefaultAsync(e => e.UserId == query.userId || e.UserName == query.userId || e.Post == query.userId);
             if(user!=null)
                 return mapper.Map<UserDto>(user);
             return null;

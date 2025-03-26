@@ -14,6 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Routing;
+
 using MudBlazor;
 using MudBlazor.Services;
 using Serilog;
@@ -72,7 +73,7 @@ builder.Services.AddSingleton<IActionContextAccessor, ActionContextAccessor>();
 //add common service
 builder.Services.AddScoped<IN.ITokenService,TokenService>();
 
-
+//var AppBasePath = builder.Configuration.GetValue<string>(CN.Setting.AppBasePath);
 
 //Add razor view global state
 builder.Services.AddScoped<LayoutStateModel>();

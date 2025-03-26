@@ -3,4 +3,6 @@
 public class LayoutStateModel
 {
     public bool SideBarOpen { get; set; }
+
+    
 }

@@ -11,8 +11,8 @@ namespace blazelogBase.Shared.Tools
     public sealed class PasswordHasher
     {
         public byte Version => 1;
-        public int SaltSize { get; } = 512 / 8; // 64 bits
-        public HashAlgorithmName HashAlgorithmName { get; } = HashAlgorithmName.SHA512;
+        public int SaltSize { get; } = 128 / 8; // 128 bits
+        public HashAlgorithmName HashAlgorithmName { get; } = HashAlgorithmName.SHA256;
 
         public string HashPassword(string password)
         {
@@ -21,7 +21,7 @@ namespace blazelogBase.Shared.Tools
 
             // The salt must be unique for each password
             byte[] salt = GenerateSalt(SaltSize);
-            byte[] hash = HashPasswordWithSalt(password, salt,SaltSize);
+            byte[] hash = HashPasswordWithSalt(password, salt);
 
             var inArray = new byte[1 + SaltSize + hash.Length];
             inArray[0] = Version;
@@ -50,7 +50,7 @@ namespace blazelogBase.Shared.Tools
             var salt = numArray.Skip(1).Take(SaltSize).ToArray();
             var bytes = numArray.Skip(1 + SaltSize).ToArray();
 
-            var hash = HashPasswordWithSalt(password, salt, SaltSize);
+            var hash = HashPasswordWithSalt(password, salt);
 
             if (FixedTimeEquals(hash, bytes))
                 return PasswordVerificationResult.Success;
@@ -58,30 +58,23 @@ namespace blazelogBase.Shared.Tools
             return PasswordVerificationResult.Failed;
         }
 
-        private byte[] HashPasswordWithSalt(string password, byte[] salt, int keySize, int iterations=350000)
+        private byte[] HashPasswordWithSalt(string password, byte[] salt)
         {
             byte[] hash;
-
-            hash = Rfc2898DeriveBytes.Pbkdf2(
-                  Encoding.UTF8.GetBytes(password),
-                  salt,
-                  iterations,
-                  HashAlgorithmName,
-                  keySize);
-            //using (var hashAlgorithm = HashAlgorithm.Create(HashAlgorithmName.Name))
-            //{
-            //    byte[] input = Encoding.UTF8.GetBytes(password);
-            //    hashAlgorithm.TransformBlock(salt, 0, salt.Length, salt, 0);
-            //    hashAlgorithm.TransformFinalBlock(input, 0, input.Length);
-            //    hash = hashAlgorithm.Hash;
-            //}
+            using (var hashAlgorithm = HashAlgorithm.Create(HashAlgorithmName.Name))
+            {
+                byte[] input = Encoding.UTF8.GetBytes(password);
+                hashAlgorithm.TransformBlock(salt, 0, salt.Length, salt, 0);
+                hashAlgorithm.TransformFinalBlock(input, 0, input.Length);
+                hash = hashAlgorithm.Hash;
+            }
 
             return hash;
         }
 
         private static byte[] GenerateSalt(int byteLength)
         {
-            using (var cryptoServiceProvider =  RandomNumberGenerator.Create())
+            using (var cryptoServiceProvider = new RNGCryptoServiceProvider())
             {
                 var data = new byte[byteLength];
                 cryptoServiceProvider.GetBytes(data);
