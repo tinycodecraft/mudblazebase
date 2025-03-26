@@ -119,7 +119,7 @@
                 StateHasChanged();
                 return;
             }
-            //Sign in operation can only be worked in SSR.
+            //Sign in operation can only be worked in SSR.  Please move the following to controller
 
             await HttpContextAccessor.HttpContext!.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal!, authProperties);
             NavigationManager.NavigateTo("/");
