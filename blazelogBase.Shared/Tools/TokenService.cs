@@ -70,6 +70,7 @@ namespace blazelogBase.Shared.Tools
                 Console.WriteLine("Cookie was issued at " + jwtToken.IssuedAt);
                 Console.WriteLine("Cookie was valid to " + jwtToken.ValidTo);
 
+                int userKey = int.Parse(jwtToken.Claims.First(x => x.Type == nameof(IAuthResult.userKey)).Value);
                 string userid = jwtToken.Claims.First(x => x.Type == nameof(IAuthResult.userID)).Value;
                 string username = jwtToken.Claims.First(x => x.Type == nameof(IAuthResult.userName)).Value;
                 string email = jwtToken.Claims.First(x => x.Type == nameof(IAuthResult.email)).Value;
@@ -81,6 +82,7 @@ namespace blazelogBase.Shared.Tools
 
                 return new AuthUserModel
                 {
+                    userKey=userKey,
                     userID = userid,
                     userName = username,
                     email = email,
@@ -131,6 +133,7 @@ namespace blazelogBase.Shared.Tools
                     new Claim(JwtRegisteredClaimNames.Aud, audience),
                     new Claim(JwtRegisteredClaimNames.Sub, Setting.Subject),
                     new Claim(JwtRegisteredClaimNames.Jti, "HYD." + DateTime.Now.ToString("yyyyMMddhhmmss")),                                       
+                    new Claim(nameof(IAuthResult.userKey),user.userKey.ToString(), ClaimValueTypes.Integer32),
                     new Claim(nameof(IAuthResult.userName), user.userName),
                     new Claim(nameof(IAuthResult.userID), user.userID),
                     new Claim(nameof(IAuthResult.level),user.level),

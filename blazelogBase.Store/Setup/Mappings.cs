@@ -15,6 +15,7 @@ public class MappingProfile : Profile
     {
         CreateMap<CoreUser, UserDto>().ReverseMap();
         CreateMap<UserDto, AuthUserModel>()
+            .ForMember(dt => dt.userKey, ex => ex.MapFrom(ex => ex.Id))
             .ForMember(dt=> dt.email,ex=> ex.MapFrom(ex=> ex.Email))
             .ForMember(dt => dt.isadmin, ex => ex.MapFrom(ex => ex.IsAdmin))
             .ForMember(dt => dt.post, ex => ex.MapFrom(ex => ex.Post))

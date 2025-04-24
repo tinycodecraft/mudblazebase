@@ -61,7 +61,7 @@ namespace blazelogBase.Shared.Tools
         private byte[] HashPasswordWithSalt(string password, byte[] salt)
         {
             byte[] hash;
-            using (var hashAlgorithm = HashAlgorithm.Create(HashAlgorithmName.Name))
+            using (var hashAlgorithm = SHA256.Create())
             {
                 byte[] input = Encoding.UTF8.GetBytes(password);
                 hashAlgorithm.TransformBlock(salt, 0, salt.Length, salt, 0);
@@ -74,12 +74,10 @@ namespace blazelogBase.Shared.Tools
 
         private static byte[] GenerateSalt(int byteLength)
         {
-            using (var cryptoServiceProvider = new RNGCryptoServiceProvider())
-            {
-                var data = new byte[byteLength];
-                cryptoServiceProvider.GetBytes(data);
-                return data;
-            }
+            var data = new byte[byteLength];
+            RandomNumberGenerator.Fill(data);
+            //cryptoServiceProvider.GetBytes(data);
+            return data;
         }
 
         // In .NET Core 2.1, you can use CryptographicOperations.FixedTimeEquals

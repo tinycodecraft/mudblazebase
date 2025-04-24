@@ -99,6 +99,9 @@ builder.Services.AddCommandMapper();
 
 builder.Services.AddStore(builder.Configuration);
 
+builder.Services.AddHttpClient();
+builder.Services.AddScoped<HttpClient>();
+
 //Add authentication service
 
 builder.Services.AddScoped<IN.IAuthService, AuthService>();
@@ -185,7 +188,7 @@ builder.Services
 .AddInteractiveServerComponents()
 .AddCircuitOptions(options => options.DetailedErrors = true); // for debugging razor components
 
-builder.Services.AddScoped<IUrlHelper>(sp => sp.GetRequiredService<IUrlHelperFactory>().GetUrlHelper(sp.GetRequiredService<IActionContextAccessor>().ActionContext));
+//builder.Services.AddScoped<IUrlHelper>(sp => sp.GetRequiredService<IUrlHelperFactory>().GetUrlHelper(sp.GetRequiredService<IActionContextAccessor>().ActionContext));
 
 builder.Services.AddDistributedMemoryCache();
 

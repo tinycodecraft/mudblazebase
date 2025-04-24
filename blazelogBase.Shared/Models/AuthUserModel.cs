@@ -8,6 +8,7 @@ namespace blazelogBase.Shared.Models
 {
     public class AuthUserModel : IAuthResult
     {
+        public int userKey { get; set; }
         public string userID {get;set;}
 
         public string userName {get;set;}

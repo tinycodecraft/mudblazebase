@@ -55,8 +55,10 @@ public class HomeController : Controller
 
     public IActionResult Login()
     {
-        return View(new LoginModel());
+        return View(new LoginModel ());
     }
+
+
 
     public IResult Sample(bool hideSideBar = false)
     {

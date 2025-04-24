@@ -56,6 +56,7 @@ namespace blazelogBase.Shared
         }
         public interface IAuthResult
         {
+            int userKey { get;  }
             string userID { get; }
             string userName { get; }
 
