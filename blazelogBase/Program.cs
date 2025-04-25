@@ -14,7 +14,7 @@ using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Infrastructure;
 using Microsoft.AspNetCore.Mvc.Razor;
 using Microsoft.AspNetCore.Mvc.Routing;
-
+using Microsoft.Extensions.DependencyInjection;
 using MudBlazor;
 using MudBlazor.Services;
 using Serilog;
@@ -44,11 +44,15 @@ var builder = WebApplication.CreateBuilder(new WebApplicationOptions
 
 });
 
-var baseurl = builder.WebHost.GetSetting(WebHostDefaults.ServerUrlsKey);
+
 
 //Setting configurations
 var authsetting = builder.Configuration.GetSection(CN.Setting.AuthSetting);
+
+var pathsetting = builder.Configuration.GetSection(CN.Setting.PathSetting);
+
 builder.Services.Configure<AuthSetting>(authsetting);
+
 
 
 
@@ -173,7 +177,10 @@ builder.Services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationSc
 // Add services to the container.
 //builder.Services.AddControllersWithViews();
 builder.Services.AddCustomLocalization("en-US", "zh-HK");
-builder.Services.AddControllersWithViews()
+builder.Services.AddControllersWithViews(opt=>
+{
+    opt.Filters.Add<GlobalFilter>();
+})
     .AddJsonOptions(opt => opt.JsonSerializerOptions.ReferenceHandler = ReferenceHandler.IgnoreCycles)
     .AddViewLocalization( LanguageViewLocationExpanderFormat.Suffix)
     .AddDataAnnotationsLocalization(options => {

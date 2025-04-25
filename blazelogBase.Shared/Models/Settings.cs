@@ -31,7 +31,7 @@ public class PathSetting
     public string Template { get; set; }
     //the root of web path
     public string BasePath { get; set; }
-    public string BaseUrl { get; set; }
+    
 
 
 }

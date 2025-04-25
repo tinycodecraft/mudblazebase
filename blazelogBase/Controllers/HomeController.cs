@@ -12,6 +12,7 @@ using blazelogBase.Store.Dtos;
 using blazelogBase.Components.Pages;
 using blazelogBase.Shared.Tools;
 using AutoMapper;
+using Microsoft.Extensions.Options;
 
 namespace blazelogBase.Controllers;
 
@@ -22,9 +23,11 @@ public class HomeController : Controller
     private readonly IStringLocalizer _stringLocalizer;
     private readonly IN.ITokenService tokener;
     private readonly IMapper mapper;
+    private readonly PathSetting pather;
 
-    
-    public HomeController(ILogger<HomeController> logger,IStringLocalizerFactory stringFactory,IMediator mediator,IN.ITokenService tokenHelper,IMapper itmapper )
+    //var testpath = 
+
+    public HomeController(ILogger<HomeController> logger,IStringLocalizerFactory stringFactory,IMediator mediator,IN.ITokenService tokenHelper,IMapper itmapper,IOptions<PathSetting> paths )
     {
         _logger = logger;
         //using Factory instead of Dummy type blazelogBase.SharedResource as generic type of IStringLocalizer<>
@@ -32,10 +35,13 @@ public class HomeController : Controller
         commander = mediator;
         tokener = tokenHelper;
         mapper = itmapper;
+        pather = paths.Value;
     }
 
     public async Task<IActionResult> Index(GetUsersQuery query)
     {
+        //GlobalFilter inject the BaseUrl from HttpContextAccessor
+        //ViewData[CN.Setting.BaseUrl];
         var cn = new CancellationToken();
         var user = await commander.Send( new GetUserQuery("UXKBS"),cn);
         var authuser = mapper.Map<AuthUserModel>(user);
@@ -55,6 +61,7 @@ public class HomeController : Controller
 
     public IActionResult Login()
     {
+        
         return View(new LoginModel ());
     }
 
