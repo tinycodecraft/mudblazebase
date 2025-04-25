@@ -3,6 +3,7 @@
 @inject ISender Commander
 @inject IN.IAuthService AuthService
 @inject NavigationManager NavigationManager
+@inject HttpClient Client
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 @using System.Text.RegularExpressions
@@ -64,7 +65,7 @@
     string[] errors = { };
     MudTextField<string> pwprimref;
     MudForm form;
-    
+
     private LoginModel model = new LoginModel();
 
     InputType passwordInputType = InputType.Password;
@@ -76,18 +77,12 @@
         await form.Validate();
         if (form.IsValid)
         {
-            var principalresult = await AuthService.Authenticate(model.UserId, model.Password) ;
 
+            Client.BaseAddress = new Uri(NavigationManager.BaseUri);
 
-            var principal =  principalresult.Value as ClaimsPrincipal;
+            var response = await Client.PostAsJsonAsync("Home/Login", model);
 
-            if(principalresult.IsError || principalresult.Value==null)
-            {
-                errors = new[] { principalresult.FirstError.ToString() };
-                StateHasChanged();
-                return;
-            }
-
+            var props = await response.Content.ReadFromJsonAsync<CookieProps>();
 
 
             NavigationManager.NavigateTo("/");

@@ -9,8 +9,16 @@ using System.Threading.Tasks;
 namespace blazelogBase.Shared.Models
 {
 
-  
+    public class  CookieProps 
+    {
+        public bool result { get; set; } 
+        public string cookie { get; set; } = "";    
+        public string cookieName { get; set; } = "";
+
+    }
+
     //using in react mantine table
+
     public class SortProps
     {
         public bool Desc { get; set; }
