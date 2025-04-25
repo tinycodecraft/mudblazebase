@@ -3,7 +3,7 @@
 @inject ISender Commander
 @inject IN.IAuthService AuthService
 @inject NavigationManager NavigationManager
-@rendermode InteractiveServer
+@rendermode @(new InteractiveServerRenderMode(prerender: false))
 
 @using System.Text.RegularExpressions
 @using System.ComponentModel.DataAnnotations
