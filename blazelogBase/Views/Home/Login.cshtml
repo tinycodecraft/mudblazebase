@@ -2,5 +2,61 @@
 @{
 
 }
+@{
+    <section class="gradient-custom">
+        <div class="container inner-form-height">
+            <div class="row d-flex justify-content-center align-items-center inner-form-height">
+                <div class="col-12 col-md-8 col-lg-6 col-xl-5">
+                    <form id="LoginForm" method="post" asp-controller="Home" asp-action="Login">
+                        <div class="card bg-dark text-white" style="border-radius: 1rem;">
+                            <div class="card-body p-5 text-center">
 
-<component type="typeof(Login)" render-mode="ServerPrerendered" />
+                                <div class="mb-md-5 mt-md-4 pb-5">
+
+                                    <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
+                                    <p class="text-white-50 mb-5">Please enter your login and password!</p>
+
+                                    <div data-mdb-input-init class="form-outline form-white mb-4">
+                                        <input type="text" asp-for="UserId" class="form-control form-control-lg" />
+                                        <label class="form-label" asp-for="UserId" for="UserId">User Id</label>                                        
+                                    </div>
+
+                                    <div data-mdb-input-init class="form-outline form-white mb-4">
+                                        <input type="password" asp-for="Password" class="form-control form-control-lg" />
+                                        <label class="form-label" asp-for="Password">Password</label>                                        
+                                    </div>
+
+
+
+                                    <button data-mdb-button-init data-mdb-ripple-init class="btn btn-outline-light btn-lg px-5" type="submit" form="LoginForm" asp-area="" asp-controller="Home" asp-action="Login">Login</button>
+
+                                    <div class="d-flex justify-content-center text-center mt-4 pt-1">
+                                        @*                                     <a href="#!" class="text-white"><i class="fab fa-facebook-f fa-lg"></i></a>
+                                    <a href="#!" class="text-white"><i class="fab fa-twitter fa-lg mx-4 px-2"></i></a>
+                                    <a href="#!" class="text-white"><i class="fab fa-google fa-lg"></i></a> *@
+                                    </div>
+
+                                </div>
+
+
+
+                            </div>
+                        </div>
+                    </form>
+
+                </div>
+            </div>
+        </div>
+    </section>
+
+}
+
+@section Scripts {
+    @{
+        <script type="text/javascript" src="@Url.Content("~/js/rz-login.js")"></script>
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}
+@section Styles {
+    <link rel="stylesheet" href="~/css/rz-login.css" />
+}

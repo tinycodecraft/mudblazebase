@@ -1,6 +1,6 @@
 ﻿/*!
 * MDB5
-* Version: FREE 8.2.0
+* Version: FREE 9.0.0
 *
 *
 * Copyright: Material Design for Bootstrap
@@ -14637,7 +14637,10 @@ textarea.form-control-lg {
 }
 
 :root, [data-mdb-theme=light] {
-    --mdb-font-roboto: "Roboto", sans-serif;
+    --mdb-page-header-height: 52px;
+    --mdb-page-footer-height: 70px;
+    --mdb-font-amita: "Amita";
+    --mdb-font-roboto: "Roboto";
     --mdb-bg-opacity: 1;
     --mdb-text-hover-opacity: 0.8;
     --mdb-surface-color: #4f4f4f;

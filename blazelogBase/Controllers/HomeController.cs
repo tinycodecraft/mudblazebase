@@ -18,6 +18,7 @@ using DocumentFormat.OpenXml.InkML;
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authentication;
 using OpenXmlPowerTools.HtmlToWml.CSS;
+using Microsoft.AspNetCore.Authorization;
 
 namespace blazelogBase.Controllers;
 
@@ -78,7 +79,8 @@ public class HomeController : Controller
     }
 
     [HttpPost]
-    public async Task<IActionResult> Login([FromBody]LoginModel result)
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Login(LoginModel result)
     {
         var principalresult = await authService.Authenticate(result.UserId, result.Password);
 
@@ -120,14 +122,8 @@ public class HomeController : Controller
         };
         
         await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, principal!, authProperties);
-        var cookieHeader = Response.GetTypedHeaders().SetCookie;
-        if(cookieHeader!=null && cookieHeader.Any(y=> y.Name== CN.Setting.AuthorizeCookieKey))
-        {
-            var cookie = cookieHeader.FirstOrDefault(y => y.Name == CN.Setting.AuthorizeCookieKey)!;
-            return Json(new CookieProps {  cookie =Uri.UnescapeDataString( cookie.Value.ToString()), cookieName = CN.Setting.AuthorizeCookieKey, result = true });
-        }
 
-        return Json(new { result = false });
+        return RedirectToAction("Index");
         
     }
 
@@ -152,7 +148,14 @@ public class HomeController : Controller
 
         return View(model);
     }
-
+    [Authorize]
+    public IActionResult ChangeLang()
+    {
+        var model = ViewModelFactory.CreateChangeLangModel();
+        return View(model);
+    }
+    [HttpPost]
+    [Authorize]
     public IActionResult ChangeLang(ChangeLangModel model)
     {
         if(model.IsSubmit)
@@ -162,7 +165,7 @@ public class HomeController : Controller
             return LocalRedirect("/");
 
         }
-        model = ViewModelFactory.CreateChangeLangModel();
+        
 
         return View(model);
     }
