@@ -82,6 +82,12 @@ public class HomeController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Login(LoginModel result)
     {
+        if(User.Identity!=null && User.Identity.IsAuthenticated)
+        {
+            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+        }
+        
+
         var principalresult = await authService.Authenticate(result.UserId, result.Password);
 
 
