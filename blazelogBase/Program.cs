@@ -265,6 +265,7 @@ app.UseRouting();
 //**this is for razor components
 //**not just element for mvc
 app.UseAntiforgery();
+app.UseAuthentication();
 app.UseAuthorization();
 
 app.MapControllerRoute(

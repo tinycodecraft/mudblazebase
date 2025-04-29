@@ -2,6 +2,7 @@
 @inject LayoutStateModel GlobalState
 @inject ISender Commander
 @inject IN.IAuthService AuthService
+@inject IHttpContextAccessor HttpContextAccessor
 @inject NavigationManager NavigationManager
 @inject HttpClient Client
 @rendermode @(new InteractiveServerRenderMode(prerender: false))
@@ -83,7 +84,16 @@
             var response = await Client.PostAsJsonAsync("Home/Login", model);
 
             var props = await response.Content.ReadFromJsonAsync<CookieProps>();
+            //cannot set cookie in blazor server side
+            var cookieOptions = new CookieOptions
+                {
+                    Expires = DateTime.Now.AddDays(1),
+                    HttpOnly = true,
+                    
+                };
 
+            HttpContextAccessor.HttpContext!.Response.Cookies.Append( props.cookieName, props.cookie, cookieOptions);
+            
 
             NavigationManager.NavigateTo("/");
 

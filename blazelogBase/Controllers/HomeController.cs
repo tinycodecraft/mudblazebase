@@ -124,7 +124,7 @@ public class HomeController : Controller
         if(cookieHeader!=null && cookieHeader.Any(y=> y.Name== CN.Setting.AuthorizeCookieKey))
         {
             var cookie = cookieHeader.FirstOrDefault(y => y.Name == CN.Setting.AuthorizeCookieKey)!;
-            return Json(new CookieProps {  cookie = cookie.Value.ToString(), cookieName = CN.Setting.AuthorizeCookieKey, result = true });
+            return Json(new CookieProps {  cookie =Uri.UnescapeDataString( cookie.Value.ToString()), cookieName = CN.Setting.AuthorizeCookieKey, result = true });
         }
 
         return Json(new { result = false });
