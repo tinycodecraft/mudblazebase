@@ -7,7 +7,7 @@
         <div class="container inner-form-height">
             <div class="row d-flex justify-content-center align-items-center inner-form-height">
                 <div class="col-12 col-md-8 col-lg-6 col-xl-5">
-                    <form id="LoginForm" method="post" asp-controller="Home" asp-action="Login">
+                    <form id="LoginForm" class="needs-validation" method="post" novalidate>
                         <div class="card bg-dark text-white" style="border-radius: 1rem;">
                             <div class="card-body p-5 text-center">
 
@@ -16,14 +16,16 @@
                                     <h2 class="fw-bold mb-2 text-uppercase">Login</h2>
                                     <p class="text-white-50 mb-5">Please enter your login and password!</p>
 
-                                    <div data-mdb-input-init class="form-outline form-white mb-4">
-                                        <input type="text" asp-for="UserId" class="form-control form-control-lg" />
-                                        <label class="form-label" asp-for="UserId" for="UserId">User Id</label>                                        
+                                    <div data-mdb-input-init class="form-outline form-white mb-6">
+                                        <input type="text" asp-for="UserId" class="form-control form-control-lg" id="fvdUserId" />
+                                        <label class="form-label" asp-for="UserId" for="fvdUserId">User Id</label>
+                                        <span asp-validation-for="UserId" class="text-danger"></span>
                                     </div>
 
-                                    <div data-mdb-input-init class="form-outline form-white mb-4">
-                                        <input type="password" asp-for="Password" class="form-control form-control-lg" />
-                                        <label class="form-label" asp-for="Password">Password</label>                                        
+                                    <div data-mdb-input-init class="form-outline form-white mb-6">
+                                        <input type="password" asp-for="Password" id="fvdPassword" class="form-control form-control-lg" />
+                                        <label class="form-label" asp-for="Password" for="fvdPassword" >Password</label>
+                                        <span asp-validation-for="Password" class="text-danger"></span>
                                     </div>
 
 
