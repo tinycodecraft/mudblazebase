@@ -40,6 +40,9 @@
     <Folder Include="wwwroot\img\" />
   </ItemGroup>
   <ItemGroup>
+    <Content Update="wwwroot\css\rz-login.css">
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Update="wwwroot\fonts\open-iconic.eot">
       <CopyToOutputDirectory>Never</CopyToOutputDirectory>
     </Content>

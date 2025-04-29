@@ -21,3 +21,12 @@
 .inner-form-height {
     height: calc(100vh - var(--mdb-page-header-height) - var(--mdb-page-footer-height));
 }
+/*
+span.field-validation-error {
+    display:block;
+    position:absolute;
+    z-index: 3;
+}
+    this is possible for single line message, otherwise it's wrapped to next line
+
+*/
