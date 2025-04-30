@@ -14639,8 +14639,9 @@ textarea.form-control-lg {
 :root, [data-mdb-theme=light] {
     --mdb-page-header-height: 52px;
     --mdb-page-footer-height: 70px;
-    --mdb-font-amita: "Amita";
-    --mdb-font-roboto: "Roboto";
+    --mdb-font-bock: "Kumar One Outline";    
+    --mdb-font-norm: "Amita";
+    --mdb-font-roboto: "Kurale";
     --mdb-bg-opacity: 1;
     --mdb-text-hover-opacity: 0.8;
     --mdb-surface-color: #4f4f4f;
