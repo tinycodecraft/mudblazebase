@@ -14637,10 +14637,12 @@ textarea.form-control-lg {
 }
 
 :root, [data-mdb-theme=light] {
-    --mdb-page-header-height: 52px;
-    --mdb-page-footer-height: 70px;
-    --mdb-font-bock: "Kumar One Outline";    
-    --mdb-font-norm: "Amita";
+    --mdb-page-header-height: 57px;
+    --mdb-page-footer-height: 80px;
+    --mdb-font-bock: "Bungee Shade";
+    --mdb-font-ital: "Amita";
+    --mdb-font-norm2: "Baloo Bhaina 2"; 
+    --mdb-font-norm: "Kurale";
     --mdb-font-roboto: "Kurale";
     --mdb-bg-opacity: 1;
     --mdb-text-hover-opacity: 0.8;
