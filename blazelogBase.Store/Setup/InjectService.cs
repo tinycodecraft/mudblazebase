@@ -40,11 +40,11 @@ namespace blazelogBase.Store.Setup
             var connc = confg.GetConnectionString(conn);
 
             // Add MSSQL DB Context
-            services.AddDbContext<BlazeLogDbContext>(options =>
+            services.AddDbContextFactory<BlazeLogDbContext>(options =>
             {
                 options.UseSqlServer(connc, providerOptions => providerOptions.EnableRetryOnFailure()).EnableDetailedErrors();
 
-            });
+            },lifetime: ServiceLifetime.Scoped);
 
             return services;
         }
