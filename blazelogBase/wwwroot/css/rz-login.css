@@ -14,6 +14,10 @@
 .font-italic {
     font-family: var(--mdb-font-ital);
 }
+.font-button {
+    font-family: var(--mdb-font-bock2);
+    font-size: larger;
+}
 
 .gradient-custom-2 {
     /* fallback for old browsers */
